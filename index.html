@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notepad Ryzzi All Projek</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(to right, #2c3e50, #3498db);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            color: white;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        header h1 i {
+            color: #3498db;
+            background-color: white;
+            padding: 10px;
+            border-radius: 50%;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .app-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .editor-section, .notes-section {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            transition: transform 0.3s ease;
+        }
+
+        .editor-section:hover, .notes-section:hover {
+            transform: translateY(-5px);
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eef5ff;
+            color: #2c3e50;
+        }
+
+        .section-title i {
+            color: #3498db;
+        }
+
+        .note-input {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .note-title {
+            padding: 15px;
+            font-size: 1.1rem;
+            border: 2px solid #eef5ff;
+            border-radius: 10px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .note-title:focus {
+            border-color: #3498db;
+        }
+
+        .note-content {
+            padding: 15px;
+            font-size: 1rem;
+            border: 2px solid #eef5ff;
+            border-radius: 10px;
+            min-height: 200px;
+            resize: vertical;
+            outline: none;
+            transition: border-color 0.3s;
+            line-height: 1.5;
+        }
+
+        .note-content:focus {
+            border-color: #3498db;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 14px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: #f8f9fa;
+            color: #495057;
+            border: 2px solid #e9ecef;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        .note-item {
+            background-color: #f8faff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 5px solid #3498db;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .note-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .note-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .note-item-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-right: 10px;
+            word-break: break-word;
+        }
+
+        .note-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .copy-btn {
+            background-color: #e3f2fd;
+            color: #3498db;
+            border: none;
+            border-radius: 8px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background-color: #3498db;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .delete-btn {
+            background-color: #ffeaea;
+            color: #e74c3c;
+            border: none;
+            border-radius: 8px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background-color: #e74c3c;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .note-item-content {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            word-break: break-word;
+            white-space: pre-wrap;
+        }
+
+        .note-date {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .empty-notes {
+            text-align: center;
+            padding: 40px 20px;
+            color: #95a5a6;
+        }
+
+        .empty-notes i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #dfe6e9;
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #2ecc71;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: transform 0.5s ease, opacity 0.5s ease;
+        }
+
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            padding: 20px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+            }
+            
+            .note-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .note-actions {
+                align-self: flex-end;
+            }
+            
+            header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-sticky-note"></i> Notepad Ryzzi All Projek</h1>
+            <p>Simpan catatan Anda dengan aman di browser. Setiap catatan memiliki keamanan yang ketat.</p>
+        </header>
+
+        <div class="app-container">
+            <section class="editor-section">
+                <h2 class="section-title"><i class="fas fa-edit"></i> Buat Catatan Baru</h2>
+                <div class="note-input">
+                    <input type="text" class="note-title" id="noteTitle" placeholder="Judul catatan...">
+                    <textarea class="note-content" id="noteContent" placeholder="Tulis catatan Anda di sini..."></textarea>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" id="saveNote">
+                            <i class="fas fa-save"></i> Simpan Catatan
+                        </button>
+                        <button class="btn btn-secondary" id="clearNote">
+                            <i class="fas fa-broom"></i> Bersihkan
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="notes-section">
+                <h2 class="section-title"><i class="fas fa-book"></i> Catatan Tersimpan</h2>
+                <div id="notesContainer">
+                    <!-- Catatan akan ditampilkan di sini -->
+                    <div class="empty-notes" id="emptyNotesMessage">
+                        <i class="fas fa-clipboard"></i>
+                        <p>Belum ada catatan. Mulailah dengan membuat catatan baru!</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <footer>
+            <p>Notepad Ryzzi All Projek &copy; 2026 | Catatan disimpan secara lokal di browser Anda</p>
+        </footer>
+    </div>
+
+    <!-- Notifikasi -->
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationText">Teks berhasil disalin!</span>
+    </div>
+
+    <script>
+        // DOM Elements
+        const noteTitleInput = document.getElementById('noteTitle');
+        const noteContentInput = document.getElementById('noteContent');
+        const saveNoteButton = document.getElementById('saveNote');
+        const clearNoteButton = document.getElementById('clearNote');
+        const notesContainer = document.getElementById('notesContainer');
+        const emptyNotesMessage = document.getElementById('emptyNotesMessage');
+        const notification = document.getElementById('notification');
+        const notificationText = document.getElementById('notificationText');
+
+        // Load notes from localStorage when page loads
+        document.addEventListener('DOMContentLoaded', loadNotes);
+
+        // Save note event
+        saveNoteButton.addEventListener('click', saveNote);
+
+        // Clear note form event
+        clearNoteButton.addEventListener('click', clearNoteForm);
+
+        // Function to save a new note
+        function saveNote() {
+            const title = noteTitleInput.value.trim();
+            const content = noteContentInput.value.trim();
+            
+            // Validation
+            if (!title || !content) {
+                showNotification('Judul dan isi catatan tidak boleh kosong!', 'warning');
+                return;
+            }
+            
+            // Create note object
+            const note = {
+                id: Date.now(),
+                title: title,
+                content: content,
+                date: new Date().toLocaleString('id-ID')
+            };
+            
+            // Get existing notes from localStorage
+            let notes = getNotesFromStorage();
+            
+            // Add new note to the beginning of the array
+            notes.unshift(note);
+            
+            // Save to localStorage
+            localStorage.setItem('notes', JSON.stringify(notes));
+            
+            // Clear form
+            clearNoteForm();
+            
+            // Reload notes
+            loadNotes();
+            
+            // Show success notification
+            showNotification('Catatan berhasil disimpan!', 'success');
+        }
+
+        // Function to load notes from localStorage
+        function loadNotes() {
+            // Get notes from localStorage
+            const notes = getNotesFromStorage();
+            
+            // Clear notes container
+            notesContainer.innerHTML = '';
+            
+            // Show empty message if no notes
+            if (notes.length === 0) {
+                notesContainer.appendChild(emptyNotesMessage);
+                emptyNotesMessage.style.display = 'block';
+                return;
+            }
+            
+            // Hide empty message
+            emptyNotesMessage.style.display = 'none';
+            
+            // Create note elements
+            notes.forEach(note => {
+                const noteElement = createNoteElement(note);
+                notesContainer.appendChild(noteElement);
+            });
+        }
+
+        // Function to create a note element
+        function createNoteElement(note) {
+            const noteElement = document.createElement('div');
+            noteElement.className = 'note-item';
+            noteElement.dataset.id = note.id;
+            
+            noteElement.innerHTML = `
+                <div class="note-header">
+                    <div class="note-item-title">${escapeHtml(note.title)}</div>
+                    <div class="note-actions">
+                        <button class="copy-btn" title="Salin teks">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                        <button class="delete-btn" title="Hapus catatan">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="note-item-content">${escapeHtml(note.content)}</div>
+                <div class="note-date">
+                    <i class="far fa-clock"></i> ${note.date}
+                </div>
+            `;
+            
+            // Add event listeners to buttons
+            const copyBtn = noteElement.querySelector('.copy-btn');
+            const deleteBtn = noteElement.querySelector('.delete-btn');
+            
+            copyBtn.addEventListener('click', () => copyNoteContent(note.content));
+            deleteBtn.addEventListener('click', () => deleteNote(note.id));
+            
+            return noteElement;
+        }
+
+        // Function to copy note content to clipboard
+        function copyNoteContent(content) {
+            navigator.clipboard.writeText(content)
+                .then(() => {
+                    showNotification('Teks berhasil disalin ke clipboard!', 'success');
+                })
+                .catch(err => {
+                    console.error('Gagal menyalin teks: ', err);
+                    showNotification('Gagal menyalin teks!', 'error');
+                });
+        }
+
+        // Function to delete a note
+        function deleteNote(id) {
+            if (!confirm('Apakah Anda yakin ingin menghapus catatan ini?')) {
+                return;
+            }
+            
+            // Get notes from localStorage
+            let notes = getNotesFromStorage();
+            
+            // Filter out the note with the given id
+            notes = notes.filter(note => note.id !== id);
+            
+            // Save to localStorage
+            localStorage.setItem('notes', JSON.stringify(notes));
+            
+            // Reload notes
+            loadNotes();
+            
+            // Show notification
+            showNotification('Catatan berhasil dihapus!', 'success');
+        }
+
+        // Function to clear note form
+        function clearNoteForm() {
+            noteTitleInput.value = '';
+            noteContentInput.value = '';
+            noteTitleInput.focus();
+        }
+
+        // Function to get notes from localStorage
+        function getNotesFromStorage() {
+            const notesJSON = localStorage.getItem('notes');
+            return notesJSON ? JSON.parse(notesJSON) : [];
+        }
+
+        // Function to show notification
+        function showNotification(message, type) {
+            notificationText.textContent = message;
+            
+            // Set color based on type
+            if (type === 'success') {
+                notification.style.backgroundColor = '#2ecc71';
+            } else if (type === 'error') {
+                notification.style.backgroundColor = '#e74c3c';
+            } else if (type === 'warning') {
+                notification.style.backgroundColor = '#f39c12';
+            }
+            
+            // Show notification
+            notification.classList.add('show');
+            
+            // Hide after 3 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Function to escape HTML to prevent XSS
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Add some sample notes if no notes exist
+        function initializeSampleNotes() {
+            const notes = getNotesFromStorage();
+            if (notes.length === 0) {
+                const sampleNotes = [
+                   
+                ];
+                
+                localStorage.setItem('notes', JSON.stringify(sampleNotes));
+                loadNotes();
+            }
+        }
+
+        // Initialize sample notes on first load
+        initializeSampleNotes();
+    </script>
+</body>
+</html>
